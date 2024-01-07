@@ -1,0 +1,56 @@
+spring:
+  application:
+    name: reactive-microservice
+  main:
+    banner-mode: off
+
+  cache:
+    type: redis
+
+  data:
+    redis:
+      repositories:
+        enabled: false
+      host: localhost
+      port: 6379
+      ssl:
+        enabled: false
+      password: P@ssword12345
+      timeout: 1000
+
+  datasource:
+    url: jdbc:sqlserver://${db.mssql.url};databaseName=${db.mssql.database-name};trustServerCertificate=true
+    driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    username: ${db.mssql.username}
+    password: ${db.mssql.password}
+
+  flyway:
+    url: jdbc:sqlserver://${db.mssql.url};databaseName=${db.mssql.database-name};trustServerCertificate=true
+    user: ${db.mssql.username}
+    password: ${db.mssql.password}
+    baseline-on-migrate: true
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0F
+
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+logging:
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
+  level:
+    org.zalando.logbook: trace
+
+db:
+  mssql:
+    host: localhost
+    port: 1433
+    database-name: reactive_db
+    username: sa
+    password: P@ssword12345
+    url: ${db.mssql.host}:${db.mssql.port}
